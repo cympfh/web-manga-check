@@ -47,7 +47,7 @@ init() {
       F="$CACHE_DIR/$(echo $url | hashcode)"
       curl -sL "$url" | web-grep "$pattern" | hashcode > $F
       cat <<EOM
-[$(date)] init $url
+[$(date)] $url
 Matched:
 ---
 $(curl -sL "$url" | web-grep "$pattern")
@@ -65,7 +65,7 @@ check() {
       F="$CACHE_DIR/$(echo $url | hashcode)"
       F_NEW="$CACHE_DIR/$(echo $url | hashcode)-new"
       curl -sL "$url" | web-grep "$pattern" | hashcode > $F_NEW
-      echo -n "[$(date)] check $url ... "
+      echo -n "[$(date)] $url ... "
       if diff $F $F_NEW > /dev/null; then
         echo "No Update"
       else
