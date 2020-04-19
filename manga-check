@@ -1,0 +1,89 @@
+#!/bin/bash
+
+CACHE_DIR=~/.cache/manga-check
+[ -d $CACHE_DIR ] || mkdir -p $CACHE_DIR
+
+usage() {
+  cat <<EOM
+Usage:
+  manga-check init
+  manga-check run
+EOM
+  exit
+}
+
+config() {
+  cat config.yml |
+    sed '/^#/d; s/[ \t]#.*//g' |
+    awk '
+      function flush() {
+        if (url != "" && pattern != "") {
+          print url
+          print pattern
+        }
+        url = ""
+        pattern = ""
+
+      }
+      /^-/ { flush() }
+      /url *:/ { url = $0 }
+      /pattern *:/ { pattern = $0 }
+      END { flush() }
+    ' |
+      sed 's/^.*url *: *//g' |
+      sed 's/^.*pattern *: *//g'
+}
+
+hashcode() {
+  md5sum | grep -o '[0-9a-f]*'
+}
+
+init() {
+  [ -d $CACHE_DIR ] && rm -r $CACHE_DIR
+  mkdir -p $CACHE_DIR
+  config |
+    while read url; do
+      read pattern
+      F="$CACHE_DIR/$(echo $url | hashcode)"
+      curl -sL "$url" | web-grep "$pattern" | hashcode > $F
+      cat <<EOM
+[$(date)] init $url
+Matched:
+---
+$(curl -sL "$url" | web-grep "$pattern")
+---
+Cache saved as $F
+
+EOM
+    done
+}
+
+check() {
+  config |
+    while read url; do
+      read pattern
+      F="$CACHE_DIR/$(echo $url | hashcode)"
+      F_NEW="$CACHE_DIR/$(echo $url | hashcode)-new"
+      curl -sL "$url" | web-grep "$pattern" | hashcode > $F_NEW
+      echo -n "[$(date)] check $url ... "
+      if diff $F $F_NEW > /dev/null; then
+        echo "No Update"
+      else
+        echo "Updated!!"
+        mv $F_NEW $F
+      fi
+    done
+}
+
+[ $# -eq 0 ] && usage
+case "$1" in
+  init )
+    init
+    ;;
+  check | run )
+    check
+    ;;
+  help | --help | -h )
+    usage
+    ;;
+esac
