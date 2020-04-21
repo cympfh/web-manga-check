@@ -1,8 +1,8 @@
 - url: https://web-ace.jp/youngaceup/contents/1000121/
-  pattern: <span class="updated-date">{}</span>
+  html: <span class="updated-date">{}</span>
 - url: https://mangacross.jp/api/comics/yabai.json
-  pattern: {}
+  json: .comic.episodes[0].volume
 - url: http://to-ti.in/product/mariakodama
-  pattern: <time>{}</time>
+  html: <time>{}</time>
 - url: https://comic-ryu.jp/_oshi/
-  pattern: <p class=date>{}</p>
+  html: <p class=date>{}</p>

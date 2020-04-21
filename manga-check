@@ -17,25 +17,48 @@ config() {
     sed '/^#/d; s/[ \t]#.*//g' |
     awk '
       function flush() {
-        if (url != "" && pattern != "") {
+        if (url != "" && type != "" && pattern != "") {
           print url
+          print type
           print pattern
         }
         url = ""
+        type = ""
         pattern = ""
-
       }
       /^-/ { flush() }
       /url *:/ { url = $0 }
-      /pattern *:/ { pattern = $0 }
+      /html *:/ {
+        type = "html"
+        pattern = $0
+      }
+      /json *:/ {
+        type = "json"
+        pattern = $0
+      }
       END { flush() }
     ' |
       sed 's/^.*url *: *//g' |
-      sed 's/^.*pattern *: *//g'
+      sed 's/^.*html *: *//g' |
+      sed 's/^.*json *: *//g'
 }
 
 hashcode() {
   md5sum | grep -o '[0-9a-f]*'
+}
+
+extract() {
+  URL="$1"
+  TYPE="$2"
+  PATTERN="$3"
+  case "$TYPE" in
+    html )
+      curl -sL "$URL" | web-grep "$PATTERN"
+      ;;
+    json )
+      curl -sL "$URL" | jq "$PATTERN"
+      ;;
+  esac
 }
 
 init() {
@@ -43,14 +66,18 @@ init() {
   mkdir -p $CACHE_DIR
   config |
     while read url; do
-      read pattern
+      read ty
+      read pat
       F="$CACHE_DIR/$(echo $url | hashcode)"
-      curl -sL "$url" | web-grep "$pattern" | hashcode > $F
+      extract "$url" "$ty" "$pat" | hashcode > $F
       cat <<EOM
-[$(date)] $url
+[$(date)] init
+Url: $url
+Extract Type: $ty
+Pattern: $pat
 Matched:
 ---
-$(curl -sL "$url" | web-grep "$pattern")
+$(extract "$url" "$ty" "$pat")
 ---
 Cache saved as $F
 
@@ -61,10 +88,11 @@ EOM
 check() {
   config |
     while read url; do
-      read pattern
+      read ty
+      read pat
       F="$CACHE_DIR/$(echo $url | hashcode)"
       F_NEW="$CACHE_DIR/$(echo $url | hashcode)-new"
-      curl -sL "$url" | web-grep "$pattern" | hashcode > $F_NEW
+      extract "$url" "$ty" "$pat" | hashcode > $F_NEW
       echo -n "[$(date)] $url ... "
       if diff $F $F_NEW > /dev/null; then
         echo "No Update"
