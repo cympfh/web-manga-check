@@ -21,26 +21,27 @@ config() {
           print url
           print type
           print pattern
+          print notify_url == "" ? url : notify_url
         }
         url = ""
+        notify_url = ""
         type = ""
         pattern = ""
       }
       /^-/ { flush() }
-      /url *:/ { url = $0 }
-      /html *:/ {
+      /^[- ]*url *:/ { url = $0 }
+      /^[- ]*notify_url *:/ { notify_url = $0 }
+      /^[- ]*html *:/ {
         type = "html"
         pattern = $0
       }
-      /json *:/ {
+      /^[- ]*json *:/ {
         type = "json"
         pattern = $0
       }
       END { flush() }
     ' |
-      sed 's/^.*url *: *//g' |
-      sed 's/^.*html *: *//g' |
-      sed 's/^.*json *: *//g'
+      sed 's/^[- ]*[a-zA-Z0-9_]* *:  *//g'
 }
 
 hashcode() {
@@ -68,6 +69,7 @@ init() {
     while read url; do
       read ty
       read pat
+      read notify_url
       F="$CACHE_DIR/$(echo $url | hashcode)"
       extract "$url" "$ty" "$pat" | hashcode > $F
       cat <<EOM
@@ -90,6 +92,7 @@ check() {
     while read url; do
       read ty
       read pat
+      read notify_url
       F="$CACHE_DIR/$(echo $url | hashcode)"
       F_NEW="$CACHE_DIR/$(echo $url | hashcode)-new"
       extract "$url" "$ty" "$pat" | hashcode > $F_NEW
@@ -99,7 +102,23 @@ check() {
       else
         echo "Updated!!"
         mv $F_NEW $F
+        notify "$notify_url"
       fi
+    done
+}
+
+notify() {
+    tw "@ampeloss @unddich @cdddar Check $1 $(date "+%s")"
+}
+
+run() {
+    while :; do
+        wait-at 9:00
+        check
+        wait-at 12:00
+        check
+        wait-at 18:00
+        check
     done
 }
 
@@ -108,8 +127,11 @@ case "$1" in
   init )
     init
     ;;
-  check | run )
+  check )
     check
+    ;;
+  run )
+    run
     ;;
   help | --help | -h )
     usage
