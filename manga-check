@@ -7,7 +7,7 @@ usage() {
   cat <<EOM
 Usage:
   manga-check init
-  manga-check run
+  manga-check check
 EOM
   exit
 }
@@ -109,18 +109,7 @@ check() {
 }
 
 notify() {
-    tw "@ampeloss @unddich @cdddar Check $1 $(date "+%s")"
-}
-
-run() {
-    while :; do
-        wait-at 9:00
-        check
-        wait-at 12:00
-        check
-        wait-at 18:00
-        check
-    done
+    echo $1
 }
 
 [ $# -eq 0 ] && usage
@@ -130,9 +119,6 @@ case "$1" in
     ;;
   check )
     check
-    ;;
-  run )
-    run
     ;;
   help | --help | -h )
     usage
