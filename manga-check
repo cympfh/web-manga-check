@@ -70,8 +70,8 @@ init() {
       read ty
       read pat
       read notify_url
-      F="$CACHE_DIR/$(echo $url | hashcode)"
-      extract "$url" "$ty" "$pat" | hashcode > $F
+      F="$CACHE_DIR/$(echo $url $pat | hashcode)"
+      extract "$url" "$ty" "$pat" > $F
       cat <<EOM
 [$(date)] init
 Url: $url
@@ -79,7 +79,7 @@ Extract Type: $ty
 Pattern: $pat
 Matched:
 ---
-$(extract "$url" "$ty" "$pat")
+$(cat $F)
 ---
 Cache saved as $F
 
@@ -93,17 +93,18 @@ check() {
       read ty
       read pat
       read notify_url
-      F="$CACHE_DIR/$(echo $url | hashcode)"
-      F_NEW="$CACHE_DIR/$(echo $url | hashcode)-new"
-      extract "$url" "$ty" "$pat" | hashcode > $F_NEW
+      F="$CACHE_DIR/$(echo $url $pat | hashcode)"
+      F_NEW="$CACHE_DIR/$(echo $url $pat | hashcode)-new"
+      extract "$url" "$ty" "$pat" > $F_NEW
       echo -n "[$(date)] $url ... "
       if diff $F $F_NEW > /dev/null; then
         echo "No Update"
       else
         echo "Updated!!"
-        mv $F_NEW $F
+        diff $F $F_NEW
         notify "$notify_url"
       fi
+      mv $F_NEW $F
     done
 }
 
