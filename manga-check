@@ -7,7 +7,7 @@ usage() {
   cat <<EOM
 Usage:
   manga-check init
-  manga-check run
+  manga-check check
 EOM
   exit
 }
@@ -21,26 +21,27 @@ config() {
           print url
           print type
           print pattern
+          print notify_url == "" ? url : notify_url
         }
         url = ""
+        notify_url = ""
         type = ""
         pattern = ""
       }
       /^-/ { flush() }
-      /url *:/ { url = $0 }
-      /html *:/ {
+      /^[- ]*url *:/ { url = $0 }
+      /^[- ]*notify_url *:/ { notify_url = $0 }
+      /^[- ]*html *:/ {
         type = "html"
         pattern = $0
       }
-      /json *:/ {
+      /^[- ]*json *:/ {
         type = "json"
         pattern = $0
       }
       END { flush() }
     ' |
-      sed 's/^.*url *: *//g' |
-      sed 's/^.*html *: *//g' |
-      sed 's/^.*json *: *//g'
+      sed 's/^[- ]*[a-zA-Z0-9_]* *:  *//g'
 }
 
 hashcode() {
@@ -68,8 +69,9 @@ init() {
     while read url; do
       read ty
       read pat
-      F="$CACHE_DIR/$(echo $url | hashcode)"
-      extract "$url" "$ty" "$pat" | hashcode > $F
+      read notify_url
+      F="$CACHE_DIR/$(echo $url $pat | hashcode)"
+      extract "$url" "$ty" "$pat" > $F
       cat <<EOM
 [$(date)] init
 Url: $url
@@ -77,7 +79,7 @@ Extract Type: $ty
 Pattern: $pat
 Matched:
 ---
-$(extract "$url" "$ty" "$pat")
+$(cat $F)
 ---
 Cache saved as $F
 
@@ -90,17 +92,24 @@ check() {
     while read url; do
       read ty
       read pat
-      F="$CACHE_DIR/$(echo $url | hashcode)"
-      F_NEW="$CACHE_DIR/$(echo $url | hashcode)-new"
-      extract "$url" "$ty" "$pat" | hashcode > $F_NEW
+      read notify_url
+      F="$CACHE_DIR/$(echo $url $pat | hashcode)"
+      F_NEW="$CACHE_DIR/$(echo $url $pat | hashcode)-new"
+      extract "$url" "$ty" "$pat" > $F_NEW
       echo -n "[$(date)] $url ... "
       if diff $F $F_NEW > /dev/null; then
         echo "No Update"
       else
         echo "Updated!!"
-        mv $F_NEW $F
+        diff $F $F_NEW
+        notify "$notify_url"
       fi
+      mv $F_NEW $F
     done
+}
+
+notify() {
+    echo $1
 }
 
 [ $# -eq 0 ] && usage
@@ -108,7 +117,7 @@ case "$1" in
   init )
     init
     ;;
-  check | run )
+  check )
     check
     ;;
   help | --help | -h )

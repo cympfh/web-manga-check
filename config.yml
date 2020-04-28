@@ -1,8 +1,20 @@
 - url: https://web-ace.jp/youngaceup/contents/1000121/
   html: <span class="updated-date">{}</span>
-- url: https://mangacross.jp/api/comics/yabai.json
-  json: .comic.episodes[0].volume
 - url: http://to-ti.in/product/mariakodama
   html: <time>{}</time>
 - url: https://comic-ryu.jp/_oshi/
   html: <p class=date>{}</p>
+- url: https://comic-walker.com/contents/detail/KDCW_EB01201575010000_68/
+  html: <div class=comicIndex-box><span class=comicIndex-date>{}</span></div>
+- url: https://mangacross.jp/api/comics/yabai.json
+  json: .comic.episodes[0].volume
+  notify_url: https://mangacross.jp/comics/yabai
+- url: https://mangacross.jp/api/comics/kamiinabotan.json
+  json: .comic.episodes[0].volume
+  notify_url: https://mangacross.jp/comics/kamiinabotan
+- url: https://kuragebunch.com/series
+  html: <a class=series-data-container href={}><h4>山と食欲と私</h4></a>
+  notify_url: https://kuragebunch.com/series 山と食欲と私
+- url: https://kuragebunch.com/series
+  html: <a class=series-data-container href={}><h4>働かないふたり</h4></a>
+  notify_url: https://kuragebunch.com/series 働かないふたり
