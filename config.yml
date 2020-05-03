@@ -13,8 +13,12 @@
   json: .comic.episodes[0].volume
   notify_url: https://mangacross.jp/comics/kamiinabotan
 - url: https://kuragebunch.com/series
-  html: <a class=series-data-container href={}><h4>山と食欲と私</h4></a>
+  html: <div class="series-data"><a><h4>山と食欲と私</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
   notify_url: https://kuragebunch.com/series 山と食欲と私
 - url: https://kuragebunch.com/series
-  html: <a class=series-data-container href={}><h4>働かないふたり</h4></a>
+  html: <div class="series-data"><a><h4>働かないふたり</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
   notify_url: https://kuragebunch.com/series 働かないふたり
+
+- url: https://www.city.bunkyo.lg.jp/kusejoho/coronakyuhu.html
+  html: <div class="bun-updateDay">{}</div>
+
