@@ -1,24 +1,39 @@
-- url: https://web-ace.jp/youngaceup/contents/1000121/
-  html: <span class="updated-date">{}</span>
-- url: http://to-ti.in/product/mariakodama
+- name: ご飯は私を裏切らない
+  url: https://web-ace.jp/youngaceup/contents/1000121/
+  html: <span class="label_day-of-the-week">{}</span>
+
+- name: 児玉まりあ文学集成
+  url: http://to-ti.in/product/mariakodama
   html: <time>{}</time>
-- url: https://comic-ryu.jp/_oshi/
-  html: <p class=date>{}</p>
-- url: https://comic-walker.com/contents/detail/KDCW_EB01201575010000_68/
+
+- name: 推しが武道館いってくれたら死ぬ
+  url: https://comic-ryu.jp/_oshi/
+  html: <p class="lastdate">{}</p>
+
+- name: 雑な生活
+  url: https://comic-walker.com/contents/detail/KDCW_EB01201575010000_68/
   html: <div class=comicIndex-box><span class=comicIndex-date>{}</span></div>
-- url: https://mangacross.jp/api/comics/yabai.json
+
+- name: 僕の心のヤバイやつ
+  url: https://mangacross.jp/api/comics/yabai.json
   json: .comic.episodes[0].volume
   notify_url: https://mangacross.jp/comics/yabai
-- url: https://mangacross.jp/api/comics/kamiinabotan.json
+
+- name: 上伊那ぼたん、酔へる姿は百合の花
+  url: https://mangacross.jp/api/comics/kamiinabotan.json
   json: .comic.episodes[0].volume
   notify_url: https://mangacross.jp/comics/kamiinabotan
-- url: https://kuragebunch.com/series
+
+- name: 山と食欲と私
+  url: https://kuragebunch.com/series
   html: <div class="series-data"><a><h4>山と食欲と私</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
   notify_url: https://kuragebunch.com/series 山と食欲と私
-- url: https://kuragebunch.com/series
+
+- name: 働かないふたり
+  url: https://kuragebunch.com/series
   html: <div class="series-data"><a><h4>働かないふたり</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
   notify_url: https://kuragebunch.com/series 働かないふたり
 
-- url: https://www.city.bunkyo.lg.jp/kusejoho/coronakyuhu.html
+- name: 文京区給付金
+  url: https://www.city.bunkyo.lg.jp/tetsuzuki/coronakinkyukeizaitaisaku/coronakyuhu.html
   html: <div class="bun-updateDay">{}</div>
-
