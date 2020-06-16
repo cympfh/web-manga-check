@@ -2,6 +2,10 @@
   url: https://web-ace.jp/youngaceup/contents/1000121/
   html: <span class="label_day-of-the-week">{}</span>
 
+- name: 私の拳をうけとめて！
+  url: https://web-ace.jp/youngaceup/contents/1000075/
+  html: <span class="label_day-of-the-week">{}</span>
+
 - name: 児玉まりあ文学集成
   url: http://to-ti.in/product/mariakodama
   html: <time>{}</time>
@@ -25,14 +29,16 @@
   notify_url: https://mangacross.jp/comics/kamiinabotan
 
 - name: 山と食欲と私
-  url: https://kuragebunch.com/series
+  url: https://kuragebunch.com/series/kuragebunch
   html: <div class="series-data"><a><h4>山と食欲と私</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
-  notify_url: https://kuragebunch.com/series 山と食欲と私
 
 - name: 働かないふたり
-  url: https://kuragebunch.com/series
+  url: https://kuragebunch.com/series/kuragebunch
   html: <div class="series-data"><a><h4>働かないふたり</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
-  notify_url: https://kuragebunch.com/series 働かないふたり
+
+- name: 姫乃ちゃんに恋はまだ早い
+  url: https://kuragebunch.com/series/kuragebunch
+  html: <div class="series-data"><a><h4>姫乃ちゃんに恋はまだ早い</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
 
 - name: 文京区給付金
   url: https://www.city.bunkyo.lg.jp/tetsuzuki/coronakinkyukeizaitaisaku/coronakyuhu.html
