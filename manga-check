@@ -118,7 +118,7 @@ notify() {
     NAME="$1"
     URL="$2"
     DIFF="$3"
-    tw "@ampeloss @unddich @cdddar Check $NAME $URL
+    tw --by ampeloss "@cdddar Check $NAME $URL
 $(cat $DIFF)"
 }
 
