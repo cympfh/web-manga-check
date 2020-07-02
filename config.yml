@@ -40,6 +40,10 @@
   url: https://kuragebunch.com/series/kuragebunch
   html: <div class="series-data"><a><h4>姫乃ちゃんに恋はまだ早い</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
 
+- name: 沖縄で好きになった子が方言すぎてツラすぎる
+  url: https://kuragebunch.com/series/kuragebunch
+  html: <div class="series-data"><a><h4>沖縄で好きになった子が方言すぎてツラすぎる</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
+
 - name: 文京区給付金
   url: https://www.city.bunkyo.lg.jp/tetsuzuki/coronakinkyukeizaitaisaku/coronakyuhu.html
   html: <div class="bun-updateDay">{}</div>
