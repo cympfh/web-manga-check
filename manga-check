@@ -2,6 +2,7 @@
 
 CACHE_DIR=~/.cache/manga-check
 [ -d $CACHE_DIR ] || mkdir -p $CACHE_DIR
+[ -f extension.sh ] && source ./extension.sh
 
 usage() {
   cat <<EOM
@@ -120,6 +121,12 @@ notify() {
     DIFF="$3"
     tw --by ampeloss "@cdddar @ampeloss Check $NAME $URL
 $(cat $DIFF)"
+
+    if [ -n "$SLACK_WEBHOOK" ]; then
+      qj -e .channel=#manga .username=mangabot .text="Check $NAME $URL $(printf "\n ") $(cat $DIFF)" .icon_emoji=:books: |
+        curl -X POST --data @- $SLACK_WEBHOOK
+    fi
+
 }
 
 run() {
