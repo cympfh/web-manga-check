@@ -52,6 +52,10 @@ hashcode() {
   md5sum | grep -o '[0-9a-f]*'
 }
 
+http_code() {
+  curl -sI -o /dev/null -w '%{http_code}' "$1"
+}
+
 extract() {
   URL="$1"
   TYPE="$2"
@@ -100,18 +104,29 @@ check() {
       read ty
       read pat
       read notify_url
-      F="$CACHE_DIR/$(echo $name | hashcode)"
-      F_NEW="$CACHE_DIR/$(echo $name | hashcode)-new"
-      extract "$url" "$ty" "$pat" > $F_NEW
-      echo -n "[$(date)] $url ... "
-      if diff $F $F_NEW > /dev/null; then
-        echo "No Update"
-      else
-        echo "Updated!!"
-        diff $F $F_NEW
-        notify "$name" "$notify_url" "$F_NEW"
-      fi
-      mv $F_NEW $F
+
+      http_status="$(http_code "$url")"
+      case "$http_status" in
+        2* )
+          F="$CACHE_DIR/$(echo $name | hashcode)"
+          F_NEW="$CACHE_DIR/$(echo $name | hashcode)-new"
+          extract "$url" "$ty" "$pat" > $F_NEW
+          echo -n "[$(date)] $url ... "
+          if diff $F $F_NEW > /dev/null; then
+            echo "No Update"
+          else
+            echo "Updated!!"
+            diff $F $F_NEW
+            notify "$name" "$notify_url" "$F_NEW"
+          fi
+          mv $F_NEW $F
+          ;;
+
+        * )
+          echo "Skip $url (http_status=$http_status)"
+          ;;
+      esac
+
     done
 }
 
