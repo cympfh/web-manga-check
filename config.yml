@@ -23,6 +23,11 @@
   json: .comic.episodes[0].volume
   notify_url: https://mangacross.jp/comics/yabai
 
+- name: 潮が舞い子が舞い
+  url: https://mangacross.jp/api/comics/shiomai.json
+  json: .comic.episodes[0].volume
+  notify_url: https://mangacross.jp/comics/shiomai
+
 - name: 上伊那ぼたん、酔へる姿は百合の花
   url: https://mangacross.jp/api/comics/kamiinabotan.json
   json: .comic.episodes[0].volume
@@ -44,6 +49,14 @@
   url: https://kuragebunch.com/series/kuragebunch
   html: <div class="series-data"><a><h4>沖縄で好きになった子が方言すぎてツラすぎる</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
 
-- name: 文京区給付金
-  url: https://www.city.bunkyo.lg.jp/tetsuzuki/coronakinkyukeizaitaisaku/coronakyuhu.html
-  html: <div class="bun-updateDay">{}</div>
+- name: 可愛そうにね、元気くん
+  url: https://tonarinoyj.jp/search?q=%E5%85%83%E6%B0%97%E3%81%8F%E3%82%93
+  html: <a href="{}" class="sub-link"></a>
+
+- name: 邪神ちゃんドロップキック
+  url: https://comic-meteor.jp/jyashin/
+  html: <div class="latest_info_box"><div class="latest_info_date">{}</div></div>
+
+- name: 邦キチ！ 映子さん
+  url: http://comip.jp/spinel/works/eiko/
+  html: <a class=works__new__button href={}></a>
