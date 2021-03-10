@@ -1,8 +1,10 @@
 # web 漫画の更新自動チェック
 
-## Setup, Config
+## Config
 
-See `config.cumin`, which written in cumin.
+Edit `config.cumin`, written in cumin.
+
+## Setup
 
 ```bash
 # initial, or update
