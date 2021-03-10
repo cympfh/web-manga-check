@@ -17,18 +17,21 @@ config() {
     sed '/^#/d; s/[ \t]#.*//g' |
     awk '
       function flush() {
-        if (url != "" && type != "" && pattern != "") {
+        if (name != "" && url != "" && type != "" && pattern != "") {
+          print name
           print url
           print type
           print pattern
           print notify_url == "" ? url : notify_url
         }
+        name = ""
         url = ""
         notify_url = ""
         type = ""
         pattern = ""
       }
       /^-/ { flush() }
+      /^[- ]*name *:/ { name = $0 }
       /^[- ]*url *:/ { url = $0 }
       /^[- ]*notify_url *:/ { notify_url = $0 }
       /^[- ]*html *:/ {
@@ -48,13 +51,17 @@ hashcode() {
   md5sum | grep -o '[0-9a-f]*'
 }
 
+http_code() {
+  curl -sI -o /dev/null -w '%{http_code}' "$1"
+}
+
 extract() {
   URL="$1"
   TYPE="$2"
   PATTERN="$3"
   case "$TYPE" in
     html )
-      curl -sL "$URL" | web-grep "$PATTERN"
+      curl -sL "$URL" | web-grep "$PATTERN" | head -1
       ;;
     json )
       curl -sL "$URL" | jq "$PATTERN"
@@ -66,7 +73,8 @@ init() {
   [ -d $CACHE_DIR ] && rm -r $CACHE_DIR
   mkdir -p $CACHE_DIR
   config |
-    while read url; do
+    while read name; do
+      read url
       read ty
       read pat
       read notify_url
@@ -74,6 +82,7 @@ init() {
       extract "$url" "$ty" "$pat" > $F
       cat <<EOM
 [$(date)] init
+Name: $name
 Url: $url
 Extract Type: $ty
 Pattern: $pat
@@ -89,27 +98,47 @@ EOM
 
 check() {
   config |
-    while read url; do
+    while read name; do
+      read url
       read ty
       read pat
       read notify_url
-      F="$CACHE_DIR/$(echo $url $pat | hashcode)"
-      F_NEW="$CACHE_DIR/$(echo $url $pat | hashcode)-new"
-      extract "$url" "$ty" "$pat" > $F_NEW
-      echo -n "[$(date)] $url ... "
-      if diff $F $F_NEW > /dev/null; then
-        echo "No Update"
-      else
-        echo "Updated!!"
-        diff $F $F_NEW
-        notify "$notify_url"
-      fi
-      mv $F_NEW $F
+
+      echo "$url"
+      http_status="$(http_code "$url")"
+      case "$http_status" in
+        2* )
+          F="$CACHE_DIR/$(echo $name | hashcode)"
+          F_NEW="$CACHE_DIR/$(echo $name | hashcode)-new"
+          extract "$url" "$ty" "$pat" > $F_NEW
+          echo -n "[$(date)] $url ... "
+          if diff $F $F_NEW > /dev/null; then
+            echo "No Update"
+          else
+            echo "Updated!!"
+            diff $F $F_NEW
+            notify "$name" "$notify_url" "$F_NEW"
+          fi
+          mv $F_NEW $F
+          ;;
+
+        * )
+          echo "Skip $url (http_status=$http_status)"
+          ;;
+      esac
+
     done
 }
 
 notify() {
-    echo $1
+    echo "$@"
+}
+
+run() {
+    while :; do
+        check
+        sleep 30m
+    done
 }
 
 [ $# -eq 0 ] && usage
@@ -119,6 +148,9 @@ case "$1" in
     ;;
   check )
     check
+    ;;
+  run )
+    run
     ;;
   help | --help | -h )
     usage
