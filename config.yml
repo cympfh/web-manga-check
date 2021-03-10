@@ -12,11 +12,7 @@
 
 - name: 推しが武道館いってくれたら死ぬ
   url: https://comic-ryu.jp/_oshi/
-  html: <p class="lastdate">{}</p>
-
-- name: 雑な生活
-  url: https://comic-walker.com/contents/detail/KDCW_EB01201575010000_68/
-  html: <div class=comicIndex-box><span class=comicIndex-date>{}</span></div>
+  html: <p class=lastdate data-start-date>{}</p>
 
 - name: 僕の心のヤバイやつ
   url: https://mangacross.jp/api/comics/yabai.json
@@ -45,10 +41,6 @@
   url: https://kuragebunch.com/series/kuragebunch
   html: <div class="series-data"><a><h4>姫乃ちゃんに恋はまだ早い</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
 
-- name: 沖縄で好きになった子が方言すぎてツラすぎる
-  url: https://kuragebunch.com/series/kuragebunch
-  html: <div class="series-data"><a><h4>沖縄で好きになった子が方言すぎてツラすぎる</h4></a><ul class="series-episode-link-list"><li class="latest-episode-btn"><a href="{}"></a></li></ul></div>
-
 - name: 可愛そうにね、元気くん
   url: https://tonarinoyj.jp/search?q=%E5%85%83%E6%B0%97%E3%81%8F%E3%82%93
   html: <a href="{}" class="sub-link"></a>
@@ -60,3 +52,15 @@
 - name: 邦キチ！ 映子さん
   url: http://comip.jp/spinel/works/eiko/
   html: <a class=works__new__button href={}></a>
+
+- name: はなにあらし
+  url: https://www.sunday-webry.com/detail.php?title_id=470
+  html: <a class="is-new"><img src={}></a>
+
+- name: もし、恋が見えたなら
+  url: https://comic-walker.com/contents/detail/KDCW_KS13201693010000_68/
+  html: <div id=detailIndex><p class="comicIndex-title">{}</p></div>
+
+- name: 魔法少女にあこがれて
+  url: https://storia.takeshobo.co.jp/manga/mahoako/
+  html: <div class=episode_caption>{}</div>

@@ -62,7 +62,7 @@ extract() {
   PATTERN="$3"
   case "$TYPE" in
     html )
-      curl -sL "$URL" | web-grep "$PATTERN"
+      curl -sL "$URL" | web-grep "$PATTERN" | head -1
       ;;
     json )
       curl -sL "$URL" | jq "$PATTERN"
@@ -134,8 +134,6 @@ notify() {
     NAME="$1"
     URL="$2"
     DIFF="$3"
-    tw --by ampeloss "@cdddar @ampeloss Check $NAME $URL
-$(cat $DIFF)"
 
     if [ -n "$SLACK_WEBHOOK" ]; then
       qj -e .channel=#manga .username=mangabot .text="Check $NAME $URL $(printf "\n ") $(cat $DIFF)" .icon_emoji=:books: |
