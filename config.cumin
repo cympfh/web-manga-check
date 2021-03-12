@@ -42,21 +42,24 @@ use "resource/cumin/base.cumin";
     link = "https://mangacross.jp/comics/kamiinabotan",
     description = "{name} https://mangacross.jp/comics/kamiinabotan",
   },
-  Item.Html(
-    "山と食欲と私",
-    "https://kuragebunch.com/series/kuragebunch",
-    "<div class=series-data><a><h4>山と食欲と私</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
-  ),
-  Item.Html(
-    "働かないふたり",
-    "https://kuragebunch.com/series/kuragebunch",
-    "<div class=series-data><a><h4>働かないふたり</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
-  ),
-  Item.Html(
-    "姫乃ちゃんに恋はまだ早い",
-    "https://kuragebunch.com/series/kuragebunch",
-    "<div class=series-data><a><h4>姫乃ちゃんに恋はまだ早い</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
-  ),
+  Item.Html {
+    name = "山と食欲と私",
+    url = "https://kuragebunch.com/series/kuragebunch",
+    query = "<div class=series-data><a><h4>山と食欲と私</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "働かないふたり",
+    url = "https://kuragebunch.com/series/kuragebunch",
+    query = "<div class=series-data><a><h4>働かないふたり</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "姫乃ちゃんに恋はまだ早い",
+    url = "https://kuragebunch.com/series/kuragebunch",
+    query = "<div class=series-data><a><h4>姫乃ちゃんに恋はまだ早い</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
+    link = "{matched}",
+  },
   Item.Html {
     name = "可愛そうにね、元気くん",
     url = "https://tonarinoyj.jp/search?q=%E5%85%83%E6%B0%97%E3%81%8F%E3%82%93",
