@@ -79,7 +79,7 @@ use "resource/cumin/base.cumin";
   Item.Html(
     "はなにあらし",
     "https://www.sunday-webry.com/detail.php?title_id=470",
-    "<a class=is-new><img src={}></a>",
+    "<a class=is-new><div class=detail-block__item--title>{}</div></a>",
   ),
   Item.Html(
     "もし、恋が見えたなら",
