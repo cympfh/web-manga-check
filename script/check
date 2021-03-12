@@ -1,0 +1,128 @@
+#!/bin/bash
+
+loginfo() {
+  if [ $# -eq 0 ]; then
+    header="[$(date)] "
+    cat | sed "s/^/$header/" >&2
+  else
+    echo "[$(date)] $@" >&2
+  fi
+}
+
+items() {
+  cat config.cumin | cuminc -T json | jq -cM .[]
+}
+
+jsonvalue() {
+  QUERY="$1"
+  JSONDATA="$2"
+  echo "$JSONDATA" | jq -r "$QUERY"
+}
+
+hashcode() {
+  if [ $# -eq 0 ]; then
+    md5sum | grep -o '[0-9a-f]*'
+  else
+    echo $@ | hashcode
+  fi
+}
+
+http_code() {
+  curl -sI -o /dev/null -w '%{http_code}' "$1"
+}
+
+extract() {
+  URL="$1"
+  TYPE="$2"
+  PATTERN="$3"
+  case "$TYPE" in
+    html )
+      curl -sL "$URL" | web-grep "$PATTERN" | head -1
+      ;;
+    json )
+      curl -sL "$URL" | jq -r "$PATTERN"
+      ;;
+  esac
+}
+
+db() {
+  QUERY="$1"
+  sqlite3 ./resource/db "$QUERY"
+}
+
+exists() {
+  HASHKEY="$1"
+  C=$(db "SELECT COUNT(*) FROM items WHERE HASHKEY = '$HASHKEY'")
+  [ $C -gt 0 ]
+}
+
+insert() {
+  TITLE="$1"
+  LINK="$2"
+  DESCRIPTION="$3"
+  HASHKEY="$4"
+  DATETIME="$(date --rfc-2822)"
+  TIMESTAMP="$(date "+%s")"
+  loginfo "INSERT INTO items VALUES ('${TITLE}', '${LINK}', '${DESCRIPTION}', '${DATETIME}', ${TIMESTAMP} '${HASHKEY}')"
+  db "INSERT INTO items VALUES ('${TITLE}', '${LINK}', '${DESCRIPTION}', '${DATETIME}', ${TIMESTAMP}, '${HASHKEY}')"
+}
+
+render() {
+  TEMPLATE="$1"
+  NAME="$(echo "$2" | tr '!' ' ')"
+  URL="$(echo "$3" | tr '!' ' ')"
+  MATCHED="$(echo "$4" | tr '!' ' ')"
+  echo "$TEMPLATE" |
+    sed "s!{name}!${NAME}!g" |
+    sed "s!{matched}!${MATCHED}!g" |
+    sed "s!{url}!${URL}!g" |
+    cat
+}
+
+EXITCODE=/tmp/manga.exitcode
+echo 1 > $EXITCODE
+
+check() {
+  items |
+    while read json; do
+      name="$(jsonvalue .name "$json")"
+      url="$(jsonvalue .url "$json")"
+      ty="$(jsonvalue .type "$json")"
+      query="$(jsonvalue .query "$json")"
+      link="$(jsonvalue .link "$json")"
+      description="$(jsonvalue .description "$json")"
+
+      loginfo "---"
+      loginfo "Checking $name $url"
+
+      http_status="$(http_code "$url")"
+      loginfo "http_status = $http_status"
+
+      case "$http_status" in
+        2* )
+          matched=$(extract "$url" "$ty" "$query")
+          hashkey=$(hashcode "$url" "$query" "$matched")
+
+          link=$(render "$link" "$name" "$url" "$matched")
+          description=$(render "$description" "$name" "$url" "$matched")
+
+          if ( exists "$hashkey" ); then
+            loginfo "No Update"
+          else
+            loginfo "Updated!!"
+            loginfo "Matched: $matched"
+            insert "$name" "$link" "$description" "$hashkey"
+            echo 0 > $EXITCODE
+          fi
+          ;;
+
+        * )
+          loginfo "Cannot fetch $url (http_status=$http_status)"
+          ;;
+      esac
+
+    done
+}
+
+check
+exit $(cat $EXITCODE)

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+cat <<EOM
+<rss version="2.0">
+  <channel>
+    <lastBuildDate>$(date --rfc-2822)</lastBuildDate>
+    <generator>@cympfh</generator>
+    <title>web-manga-check</title>
+    <link>https://github.com/cympfh/web-manga-check</link>
+    <description>web manga</description>
+EOM
+
+sqlite3 -separator "
+" ./resource/db "SELECT title,link,description,pubDate FROM items ORDER BY timestamp DESC LIMIT 100" |
+    awk '
+NR % 4 == 1 {
+  print "<item>"
+  print "  <title>" $0 "</title>"
+}
+NR % 4 == 2 {
+  print "  <link>" $0 "</link>"
+  print "  <guid isPermaLink=\"true\">" $0 "</guid>"
+}
+NR % 4 == 3 {
+  print "  <description>" $0 "</description>"
+}
+NR % 4 == 0 {
+  print "  <pubDate>" $0 "</pubDate>"
+  print "</item>"
+}
+'
+
+cat <<EOM
+  </channel>
+</rss>
+EOM
