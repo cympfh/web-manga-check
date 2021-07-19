@@ -37,7 +37,7 @@ extract() {
   PATTERN="$3"
   case "$TYPE" in
     html )
-      curl -sL "$URL" | web-grep "$PATTERN" | head -1
+      curl -sL "$URL" | nkf | web-grep "$PATTERN" | head -1
       ;;
     json )
       curl -sL "$URL" | jq -r "$PATTERN"
