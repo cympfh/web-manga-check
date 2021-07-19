@@ -1,0 +1,12 @@
+#!/bin/bash
+
+sqlite3 ./resource/db <<EOM
+CREATE TABLE items (
+    title TEXT,
+    link TEXT,
+    description TEXT,
+    pubDate TEXT,
+    timestamp INT,
+    hashkey TEXT UNIQUE
+);
+EOM
