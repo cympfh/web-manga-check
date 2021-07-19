@@ -61,6 +61,12 @@ use "resource/cumin/base.cumin";
     link = "{matched}",
   },
   Item.Html {
+    name = "今日から始める幼なじみ",
+    url = "https://kuragebunch.com/series/kuragebunch",
+    query = "<div class=series-data><a><h4>今日から始める幼なじみ</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
+    link = "{matched}",
+  },
+  Item.Html {
     name = "可愛そうにね、元気くん",
     url = "https://tonarinoyj.jp/search?q=%E5%85%83%E6%B0%97%E3%81%8F%E3%82%93",
     query = "<a href={} class=sub-link></a>",
@@ -81,14 +87,31 @@ use "resource/cumin/base.cumin";
     "https://www.sunday-webry.com/detail.php?title_id=470",
     "<a class=is-new><div class=detail-block__item--title>{}</div></a>",
   ),
-  Item.Html(
-    "もし、恋が見えたなら",
-    "https://comic-walker.com/contents/detail/KDCW_KS13201693010000_68/",
-    "<div id=detailIndex><p class=comicIndex-title>{}</p></div>",
-  ),
-  Item.Html(
-    "魔法少女にあこがれて",
-    "https://storia.takeshobo.co.jp/manga/mahoako/",
-    "<div class=episode_caption>{}</div>",
-  ),
+  Item.Html {
+    name = "少年のアビス",
+    url = "https://tonarinoyj.jp/rss/series/10834108156765668012",
+    query = "<item>{}</item>",
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "シメジ シミュレーション",
+    url = "https://comic-walker.com/contents/detail/KDCW_MF06201465010000_68/",
+    query = "<div id=detailIndex><span class=comicIndex-date>{}</span></div>",
+  },
+  Item.Html {
+    name = "安堂鍵乃子の暗号事件簿",
+    url = "https://comic-walker.com/contents/detail/KDCW_KS02201972010000_68/",
+    query = "<div id=detailIndex><span class=comicIndex-date>{}</span></div>",
+  },
+  Item.Html {
+    name = "加湿器",
+    url = "https://www.zojirushi.co.jp/syohin/humidifier/",
+    query = "<p class=prd_name>{}</p>",
+  },
+  Item.Html {
+    name = "ルーツレポ",
+    url = "https://nlab.itmedia.co.jp/nl/series/7103/",
+    query = "<div class=colBoxTitle><a href={}></a></div>",
+    link = "https:{matched}",
+  },
 ]
