@@ -11,7 +11,7 @@ cat <<EOM
 EOM
 
 sqlite3 -separator "
-" ./resource/db "SELECT title,link,description,pubDate FROM items ORDER BY timestamp DESC LIMIT 100" |
+" ./resource/db "SELECT title,link,description,pubDate FROM items WHERE link != '' ORDER BY timestamp DESC LIMIT 100" |
     awk '
 NR % 4 == 1 {
   print "<item>"

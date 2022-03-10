@@ -8,6 +8,8 @@ struct Html {
   query: String,
   link: String = "{url}",
   description: String = "{name}: {matched}",
+  include: Array<String> = [],
+  exclude: Array<String> = [],
   type: String = "html",
 }
 

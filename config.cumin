@@ -18,7 +18,7 @@ use "resource/cumin/base.cumin";
   ),
   Item.Html(
     "推しが武道館いってくれたら死ぬ",
-    "https://comic-ryu.jp/_oshi/",
+    "http://comic-ryu.jp/_oshi/",
     "<p class=lastdate data-start-date>{}</p>",
   ),
   Item.Json {
@@ -60,18 +60,6 @@ use "resource/cumin/base.cumin";
     query = "<div class=series-data><a><h4>姫乃ちゃんに恋はまだ早い</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
     link = "{matched}",
   },
-  Item.Html {
-    name = "今日から始める幼なじみ",
-    url = "https://kuragebunch.com/series/kuragebunch",
-    query = "<div class=series-data><a><h4>今日から始める幼なじみ</h4></a><ul class=series-episode-link-list><li class=latest-episode-btn><a href={}></a></li></ul></div>",
-    link = "{matched}",
-  },
-  Item.Html {
-    name = "可愛そうにね、元気くん",
-    url = "https://tonarinoyj.jp/search?q=%E5%85%83%E6%B0%97%E3%81%8F%E3%82%93",
-    query = "<a href={} class=sub-link></a>",
-    link = "{matched}",
-  },
   Item.Html(
     "邪神ちゃんドロップキック",
     "https://comic-meteor.jp/jyashin/",
@@ -88,10 +76,23 @@ use "resource/cumin/base.cumin";
     "<a class=is-new><div class=detail-block__item--title>{}</div></a>",
   ),
   Item.Html {
+    name = "ヴァンピアーズ",
+    url = "https://www.sunday-webry.com/detail.php?title_id=892",
+    query = "<a><div class=detail-block__item--title>{}</div></a>",
+    exclude = ["続きは単行本"],
+  },
+  Item.Html(
+    "龍と苺",
+    "https://www.sunday-webry.com/detail.php?title_id=1105",
+    "<a class=is-new><div class=detail-block__item--title>{}</div></a>",
+  ),
+  Item.Html {
     name = "少年のアビス",
     url = "https://tonarinoyj.jp/rss/series/10834108156765668012",
     query = "<item>{}</item>",
     link = "{matched}",
+    include = ["https"],
+    exclude = ["13933686331768523255"],
   },
   Item.Html {
     name = "シメジ シミュレーション",
@@ -104,14 +105,39 @@ use "resource/cumin/base.cumin";
     query = "<div id=detailIndex><span class=comicIndex-date>{}</span></div>",
   },
   Item.Html {
-    name = "加湿器",
-    url = "https://www.zojirushi.co.jp/syohin/humidifier/",
-    query = "<p class=prd_name>{}</p>",
-  },
-  Item.Html {
     name = "ルーツレポ",
     url = "https://nlab.itmedia.co.jp/nl/series/7103/",
     query = "<div class=colBoxTitle><a href={}></a></div>",
-    link = "https:{matched}",
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "化物語",
+    url = "https://pocket.shonenmagazine.com/rss/series/10834108156629369519",
+    query = "<item>{}</item>",
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "恋とゲバルト",
+    url = "https://comic-days.com/rss/series/3269754496467910066",
+    query = "<item>{}</item>",
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "タコピーの原罪",
+    url = "https://shonenjumpplus.com/rss/series/3269754496638370183",
+    query = "<item>{}</item>",
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "寿エンパイア",
+    url = "https://urasunday.com/title/1020",
+    query = "<div class=chapter><li><a href={}></a></li></div>",
+    link = "https://urasunday.com{matched}",
+  },
+  Item.Html {
+    name = "みなみけ",
+    url = "https://comic-days.com/rss/series/13932016480029378697",
+    query = "<item>{}</item>",
+    link = "{matched}",
   },
 ]

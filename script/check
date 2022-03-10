@@ -1,11 +1,13 @@
 #!/bin/bash
 
+ESCAPE="$( printf "\e" )"
+
 loginfo() {
   if [ $# -eq 0 ]; then
-    header="[$(date)] "
+    header="${ESCAPE}[32m[$(date)]${ESCAPE}[0m "
     cat | sed "s/^/$header/" >&2
   else
-    echo "[$(date)] $@" >&2
+    echo "${ESCAPE}[32m[$(date)]${ESCAPE}[0m $@" >&2
   fi
 }
 
@@ -17,6 +19,18 @@ jsonvalue() {
   QUERY="$1"
   JSONDATA="$2"
   echo "$JSONDATA" | jq -r "$QUERY"
+}
+
+includefilter() {
+  JSONDATA="$1"
+  cmd=$( echo "$JSONDATA" | jq -r '.include | if (.|length) == 0 then "cat" else map("grep \"\(.)\"") | join("|") | "\(.)" end' )
+  bash -c "$cmd"
+}
+
+excludefilter() {
+  JSONDATA="$1"
+  cmd=$( echo "$JSONDATA" | jq -r '.exclude | if (.|length) == 0 then "cat" else map("grep -v \"\(.)\"") | join("|") | "\(.)" end' )
+  bash -c "$cmd"
 }
 
 hashcode() {
@@ -35,9 +49,10 @@ extract() {
   URL="$1"
   TYPE="$2"
   PATTERN="$3"
+  JSON="$4"
   case "$TYPE" in
     html )
-      curl -sL "$URL" | nkf | web-grep "$PATTERN" | head -1
+      curl -sL "$URL" | nkf | web-grep "$PATTERN" | includefilter "$JSON" | excludefilter "$JSON" | head -1
       ;;
     json )
       curl -sL "$URL" | jq -r "$PATTERN"
@@ -100,7 +115,7 @@ check() {
 
       case "$http_status" in
         2* )
-          matched=$(extract "$url" "$ty" "$query")
+          matched=$(extract "$url" "$ty" "$query" "$json")
           hashkey=$(hashcode "$url" "$query" "$matched")
 
           link=$(render "$link" "$name" "$url" "$matched")
