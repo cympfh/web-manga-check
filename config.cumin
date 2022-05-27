@@ -42,6 +42,13 @@ use "resource/cumin/base.cumin";
     link = "https://mangacross.jp/comics/kamiinabotan",
     description = "{name} https://mangacross.jp/comics/kamiinabotan",
   },
+  Item.Json {
+    name = "隣のお姉さんが好き",
+    url = "https://mangacross.jp/api/comics/negasuki.json",
+    query = ".comic.episodes[0].volume",
+    link = "https://mangacross.jp/comics/negasuki",
+    description = "{name} https://mangacross.jp/comics/negasuki",
+  },
   Item.Html {
     name = "山と食欲と私",
     url = "https://kuragebunch.com/rss/series/10834108156628842505",
@@ -61,11 +68,13 @@ use "resource/cumin/base.cumin";
     "https://comic-meteor.jp/jyashin/",
     "<div class=latest_info_box><div class=latest_info_date>{}</div></div>",
   ),
-  Item.Html(
-    "邦キチ！ 映子さん",
-    "http://comip.jp/spinel/works/eiko/",
-    "<a class=works__new__button href={}></a>",
-  ),
+  Item.Html {
+    name = "邦キチ！ 映子さん",
+    url = "https://comic-ogyaaa.com/rss/series/3269754496829532985",
+    query = "<item>{}</item>",
+    include = ["https"],
+    link = "{matched}",
+  },
   Item.Html {
     name = "はなにあらし",
     url = "https://www.sunday-webry.com/rss/series/3269754496548915321",
@@ -135,10 +144,23 @@ use "resource/cumin/base.cumin";
     link = "{matched}",
   },
   Item.Html {
+    name = "ハイパーインフレーション",
+    url = "https://shonenjumpplus.com/rss/series/13933686331749163166",
+    query = "<item>{}</item>",
+    include = ["https"],
+    link = "{matched}",
+  },
+  Item.Html {
     name = "寿エンパイア",
     url = "https://urasunday.com/title/1020",
     query = "<div class=chapter><li><a href={}><div class=new></div></a></li></div>",
     link = "https://urasunday.com/title/1020",
+  },
+  Item.Html {
+    name = "日本三國",
+    url = "https://urasunday.com/title/1924",
+    query = "<div class=chapter><li><a href={}><div></div></a></li></div>",
+    link = "{name} https://urasunday.com/title/1020",
   },
   Item.Html {
     name = "みなみけ",
@@ -146,4 +168,17 @@ use "resource/cumin/base.cumin";
     query = "<item>{}</item>",
     link = "{matched}",
   },
+  Item.Html {
+    name = "鍋に弾丸を受けながら",
+    url = "https://comic.webnewtype.com/contents/nabetama/",
+    query = "<ul id=episodeList><a href={}></a></ul>",
+    link = "https://comic.webnewtype.com{matched}",
+  },
+  Item.Html {
+    name = "淫獄団地",
+    url = "https://seiga.nicovideo.jp/comic/46238",
+    query = "<div class=meta_info>{}</div>",
+    include = ["更新"],
+    link = "https://seiga.nicovideo.jp/comic/46238/new?track=ct_new",
+  }
 ]

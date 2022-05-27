@@ -16,8 +16,8 @@ refresh() {
 response() {
     cat <<EOM
 HTTP/1.1 200 OK
-Server: k-masatany 28.5 (nightly)
-Content-Type: application/rss+xml
+Server: s.cympfh.cc
+Content-Type: application/xml
 
 
 EOM
