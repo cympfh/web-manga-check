@@ -42,7 +42,7 @@ hashcode() {
 }
 
 http_code() {
-  curl -sI -o /dev/null -w '%{http_code}' "$1"
+  curl -skI -o /dev/null -w '%{http_code}' "$1"
 }
 
 extract() {
@@ -52,10 +52,10 @@ extract() {
   JSON="$4"
   case "$TYPE" in
     html )
-      curl -sL "$URL" | nkf | web-grep "$PATTERN" | includefilter "$JSON" | excludefilter "$JSON" | head -1
+      curl -sLk "$URL" | nkf | web-grep "$PATTERN" | includefilter "$JSON" | excludefilter "$JSON" | head -1
       ;;
     json )
-      curl -sL "$URL" | jq -r "$PATTERN"
+      curl -sLk "$URL" | jq -r "$PATTERN"
       ;;
   esac
 }

@@ -160,7 +160,7 @@ use "resource/cumin/base.cumin";
     name = "日本三國",
     url = "https://urasunday.com/title/1924",
     query = "<div class=chapter><li><a href={}><div></div></a></li></div>",
-    link = "{name} https://urasunday.com/title/1020",
+    link = "https://urasunday.com{matched}",
   },
   Item.Html {
     name = "みなみけ",
@@ -179,6 +179,13 @@ use "resource/cumin/base.cumin";
     url = "https://seiga.nicovideo.jp/comic/46238",
     query = "<div class=meta_info>{}</div>",
     include = ["更新"],
-    link = "https://seiga.nicovideo.jp/comic/46238/new?track=ct_new",
-  }
+    link = "https://seiga.nicovideo.jp/comic/46238",
+  },
+  Item.Json {
+    name = "ヤマノススメ",
+    url = "https://www.comic-earthstar.jp/json/contents/detail/yamanosusume.json",
+    query = ".episodes[0].comic_episode_title",
+    link = "https://www.comic-earthstar.jp/detail/yamanosusume/",
+    description = "{matched}",
+  },
 ]
