@@ -7,13 +7,8 @@ use "resource/cumin/base.cumin";
     "<span class=label_day-of-the-week>{}</span>",
   ),
   Item.Html(
-    "私の拳をうけとめて！",
-    "https://web-ace.jp/youngaceup/contents/1000075/",
-    "<span class=label_day-of-the-week>{}</span>",
-  ),
-  Item.Html(
     "児玉まりあ文学集成",
-    "http://to-ti.in/product/mariakodama",
+    "https://to-ti.in/product/mariakodama",
     "<p class=next><a href={}></a></p>",
   ),
   Item.Html(
@@ -154,7 +149,7 @@ use "resource/cumin/base.cumin";
     name = "寿エンパイア",
     url = "https://urasunday.com/title/1020",
     query = "<div class=chapter><li><a href={}><div class=new></div></a></li></div>",
-    link = "https://urasunday.com/title/1020",
+    link = "https://urasunday.com{matched}",
   },
   Item.Html {
     name = "日本三國",
@@ -171,8 +166,8 @@ use "resource/cumin/base.cumin";
   Item.Html {
     name = "鍋に弾丸を受けながら",
     url = "https://comic.webnewtype.com/contents/nabetama/",
-    query = "<ul id=episodeList><a href={}></a></ul>",
-    link = "https://comic.webnewtype.com{matched}",
+    query = "<ul class=contents__list--comic><li class=newest></li><li><h2>{}</h2></li></ul>",
+    link = "https://comic.webnewtype.com/contents/nabetama/",
   },
   Item.Html {
     name = "淫獄団地",
@@ -187,5 +182,17 @@ use "resource/cumin/base.cumin";
     query = ".episodes[0].comic_episode_title",
     link = "https://www.comic-earthstar.jp/detail/yamanosusume/",
     description = "{matched}",
+  },
+  Item.Html {
+    name = "チェンソーマン 第二部",
+    url = "https://shonenjumpplus.com/rss/series/3270375685341574005",
+    query = "<item>{}</item>",
+    include = ["https"],
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "parlor",
+    url = "https://ebookjapan.yahoo.co.jp/books/527002/",
+    query = "<h1 class=heading__main>{}</h1>",
   },
 ]

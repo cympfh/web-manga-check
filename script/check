@@ -121,7 +121,10 @@ check() {
           link=$(render "$link" "$name" "$url" "$matched")
           description=$(render "$description" "$name" "$url" "$matched")
 
-          if ( exists "$hashkey" ); then
+          if [ -z "$matched" ]; then
+            loginfo "Empty matched"
+            insert "$name" "$link" "[ERROR] $url matched empty" "$hashkey"
+          elif ( exists "$hashkey" ); then
             loginfo "No Update"
           else
             loginfo "Updated!!"
@@ -133,6 +136,7 @@ check() {
 
         * )
           loginfo "Cannot fetch $url (http_status=$http_status)"
+          insert "$name" "$link" "[ERROR] $url returns $http_status" "$hashkey"
           ;;
       esac
 
