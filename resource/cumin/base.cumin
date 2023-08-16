@@ -5,15 +5,19 @@ type Item = Html | Json;
 struct Html {
   name: String,
   url: String,
-  pattern: String,
-  format: String = "{name}: {matched}",
+  query: String,
+  link: String = "{url}",
+  description: String = "{name}: {matched}",
+  include: Array<String> = [],
+  exclude: Array<String> = [],
   type: String = "html",
 }
 
 struct Json {
   name: String,
   url: String,
-  pattern: String,
-  format: String = "{name}: {matched}",
+  query: String,
+  link: String,
+  description: String = "{name}: {matched}",
   type: String = "json",
 }

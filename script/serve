@@ -1,0 +1,35 @@
+#!/bin/bash
+
+INTERVAL=600
+PORT=8091
+
+refresh() {
+    make rss
+    while :; do
+        if make check; then
+            make rss
+        fi
+        sleep $INTERVAL
+    done
+}
+
+response() {
+    cat <<EOM
+HTTP/1.1 200 OK
+Server: s.cympfh.cc
+Content-Type: application/xml
+
+
+EOM
+    cat rss.xml
+}
+
+server() {
+    while :; do
+        response | nc -l 0.0.0.0 $PORT -q 0
+    done
+}
+
+refresh &
+server
+wait

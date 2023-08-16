@@ -1,0 +1,147 @@
+#!/bin/bash
+
+ESCAPE="$( printf "\e" )"
+
+loginfo() {
+  if [ $# -eq 0 ]; then
+    header="${ESCAPE}[32m[$(date)]${ESCAPE}[0m "
+    cat | sed "s/^/$header/" >&2
+  else
+    echo "${ESCAPE}[32m[$(date)]${ESCAPE}[0m $@" >&2
+  fi
+}
+
+items() {
+  cat config.cumin | cuminc -T json | jq -cM .[]
+}
+
+jsonvalue() {
+  QUERY="$1"
+  JSONDATA="$2"
+  echo "$JSONDATA" | jq -r "$QUERY"
+}
+
+includefilter() {
+  JSONDATA="$1"
+  cmd=$( echo "$JSONDATA" | jq -r '.include | if (.|length) == 0 then "cat" else map("grep \"\(.)\"") | join("|") | "\(.)" end' )
+  bash -c "$cmd"
+}
+
+excludefilter() {
+  JSONDATA="$1"
+  cmd=$( echo "$JSONDATA" | jq -r '.exclude | if (.|length) == 0 then "cat" else map("grep -v \"\(.)\"") | join("|") | "\(.)" end' )
+  bash -c "$cmd"
+}
+
+hashcode() {
+  if [ $# -eq 0 ]; then
+    md5sum | grep -o '[0-9a-f]*'
+  else
+    echo $@ | hashcode
+  fi
+}
+
+http_code() {
+  curl -skI -o /dev/null -w '%{http_code}' "$1"
+}
+
+extract() {
+  URL="$1"
+  TYPE="$2"
+  PATTERN="$3"
+  JSON="$4"
+  case "$TYPE" in
+    html )
+      curl -sLk "$URL" | nkf | web-grep "$PATTERN" | includefilter "$JSON" | excludefilter "$JSON" | head -1
+      ;;
+    json )
+      curl -sLk "$URL" | jq -r "$PATTERN"
+      ;;
+  esac
+}
+
+db() {
+  QUERY="$1"
+  sqlite3 ./resource/db "$QUERY"
+}
+
+exists() {
+  HASHKEY="$1"
+  C=$(db "SELECT COUNT(*) FROM items WHERE HASHKEY = '$HASHKEY'")
+  [ $C -gt 0 ]
+}
+
+insert() {
+  TITLE="$1"
+  LINK="$2"
+  DESCRIPTION="$3"
+  HASHKEY="$4"
+  DATETIME="$(date --rfc-2822)"
+  TIMESTAMP="$(date "+%s")"
+  loginfo "INSERT INTO items VALUES ('${TITLE}', '${LINK}', '${DESCRIPTION}', '${DATETIME}', ${TIMESTAMP} '${HASHKEY}')"
+  db "INSERT INTO items VALUES ('${TITLE}', '${LINK}', '${DESCRIPTION}', '${DATETIME}', ${TIMESTAMP}, '${HASHKEY}')"
+}
+
+render() {
+  TEMPLATE="$1"
+  NAME="$(echo "$2" | tr '!' ' ')"
+  URL="$(echo "$3" | tr '!' ' ')"
+  MATCHED="$(echo "$4" | tr '!' ' ')"
+  echo "$TEMPLATE" |
+    sed "s!{name}!${NAME}!g" |
+    sed "s!{matched}!${MATCHED}!g" |
+    sed "s!{url}!${URL}!g" |
+    cat
+}
+
+EXITCODE=/tmp/manga.exitcode
+echo 1 > $EXITCODE
+
+check() {
+  items |
+    while read json; do
+      name="$(jsonvalue .name "$json")"
+      url="$(jsonvalue .url "$json")"
+      ty="$(jsonvalue .type "$json")"
+      query="$(jsonvalue .query "$json")"
+      link="$(jsonvalue .link "$json")"
+      description="$(jsonvalue .description "$json")"
+
+      loginfo "---"
+      loginfo "Checking $name $url"
+
+      http_status="$(http_code "$url")"
+      loginfo "http_status = $http_status"
+
+      case "$http_status" in
+        2* )
+          matched=$(extract "$url" "$ty" "$query" "$json")
+          hashkey=$(hashcode "$url" "$query" "$matched")
+
+          link=$(render "$link" "$name" "$url" "$matched")
+          description=$(render "$description" "$name" "$url" "$matched")
+
+          if [ -z "$matched" ]; then
+            loginfo "Empty matched"
+            insert "$name" "$link" "[ERROR] $url matched empty" "$hashkey"
+          elif ( exists "$hashkey" ); then
+            loginfo "No Update"
+          else
+            loginfo "Updated!!"
+            loginfo "Matched: $matched"
+            insert "$name" "$link" "$description" "$hashkey"
+            echo 0 > $EXITCODE
+          fi
+          ;;
+
+        * )
+          loginfo "Cannot fetch $url (http_status=$http_status)"
+          insert "$name" "$link" "[ERROR] $url returns $http_status" "$hashkey"
+          ;;
+      esac
+
+    done
+}
+
+check
+exit $(cat $EXITCODE)
