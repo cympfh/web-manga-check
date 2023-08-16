@@ -1,11 +1,11 @@
 use "resource/cumin/base.cumin";
 
 [
-  Item.Html(
-    "ご飯は私を裏切らない",
-    "https://web-ace.jp/youngaceup/contents/1000121/",
-    "<span class=label_day-of-the-week>{}</span>",
-  ),
+  // Item.Html(
+  //   "ご飯は私を裏切らない",
+  //   "https://web-ace.jp/youngaceup/contents/1000121/",
+  //   "<span class=label_day-of-the-week>{}</span>",
+  // ),
   Item.Html(
     "児玉まりあ文学集成",
     "https://to-ti.in/product/mariakodama",
@@ -146,18 +146,6 @@ use "resource/cumin/base.cumin";
     link = "{matched}",
   },
   Item.Html {
-    name = "寿エンパイア",
-    url = "https://urasunday.com/title/1020",
-    query = "<div class=chapter><li><a href={}><div class=new></div></a></li></div>",
-    link = "https://urasunday.com{matched}",
-  },
-  Item.Html {
-    name = "日本三國",
-    url = "https://urasunday.com/title/1924",
-    query = "<div class=chapter><li><a href={}><div></div></a></li></div>",
-    link = "https://urasunday.com{matched}",
-  },
-  Item.Html {
     name = "みなみけ",
     url = "https://comic-days.com/rss/series/13932016480029378697",
     query = "<item>{}</item>",
@@ -193,6 +181,19 @@ use "resource/cumin/base.cumin";
   Item.Html {
     name = "parlor",
     url = "https://ebookjapan.yahoo.co.jp/books/527002/",
-    query = "<h1 class=heading__main>{}</h1>",
+    query = "<h1 class=title-main__heading>{}</h1>",
+  },
+  Item.Html {
+    name = "恋愛代行",
+    url = "https://shonenjumpplus.com/rss/series/4856001361264520000",
+    query = "<item>{}</item>",
+    include = ["https"],
+    link = "{matched}",
+  },
+  Item.Html {
+    name = "ヤニねこ",
+    url = "https://yanmaga.jp/comics/%E3%83%A4%E3%83%8B%E3%81%AD%E3%81%93",
+    query = "<ul><time class=mod-episode-date>{}</time></ul>",
+    link = "https://yanmaga.jp/comics/%E3%83%A4%E3%83%8B%E3%81%AD%E3%81%93",
   },
 ]
